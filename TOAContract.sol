@@ -69,7 +69,7 @@ using SafeMath for uint;
     }
 
 // -- static ------------------------------------------------------
-    function balanceOf (address _owner) public view returns (uint balance) {
+    function balanceOf (address _owner) public view returns (uint) {
         return TAPcount[_owner];
     }
 
