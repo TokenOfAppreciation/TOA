@@ -13,9 +13,9 @@
 // -
 
 
-// This link to the SafeMath file only works in Truffle environment.
 pragma solidity ^0.4.18;
 
+// This link to the SafeMath file only works in Truffle environment.
 import '../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol';
 
 contract TokenOfAppreciation {
@@ -38,7 +38,7 @@ using SafeMath for uint;
 // -- constructor ------------------------------------------------------
     function TokenOfAppreciation () public {
         owner = msg.sender;
-        timeInterval = 60;
+        timeInterval = 60; // a minute for debugging purposes.
     }
 
 // -- administration ---------------------------------------------------
@@ -48,10 +48,10 @@ using SafeMath for uint;
     }
 
 // -- core fucntionality -----------------------------------------------
-    function tap (address _recpipientAddress) public onlyValidated onlyTimeInterval returns (bool) {
+    function tap (address _recipientAddress) public onlyValidated onlyTimeInterval returns (bool) {
             lastTAP[msg.sender] = now;
-            TAPcount[_recpipientAddress] = TAPcount[_recpipientAddress].add(1);
-            Tapped(msg.sender, _recpipientAddress);
+            TAPcount[_recipientAddress] = TAPcount[_recipientAddress].add(1);
+            Tapped(msg.sender, _recipientAddress);
             return true;
     }
 
@@ -60,11 +60,11 @@ using SafeMath for uint;
       // send to this function without him being able to fake it?
       // can only be called by owner of contract / c-level?
 
-    function validate (address _fromAddress, address _recpipientAddress) public onlyOwner returns(bool) {
+    function validate (address _fromAddress, address _recipientAddress) public onlyOwner returns(bool) {
         lastTAP[_fromAddress] = now;
-        TAPcount[_recpipientAddress] = TAPcount[_recpipientAddress].add(1);
+        TAPcount[_recipientAddress] = TAPcount[_recipientAddress].add(1);
         Validated(_fromAddress);
-        Tapped(_fromAddress, _recpipientAddress);
+        Tapped(_fromAddress, _recipientAddress);
         return true;
     }
 
@@ -90,7 +90,7 @@ using SafeMath for uint;
         require(isValidated(msg.sender));
         _;
     }
-
+    // timeInterval is measured in seconds!
     modifier onlyTimeInterval(){
       require((lastTAP[msg.sender] + timeInterval) < now);
       _;
